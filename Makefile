@@ -18,6 +18,9 @@ endif
 
 .PHONY: all all-dev clean distclean dist thesis viewthesis spine viewspine doc viewdoc cls check save savepdf test FORCE_MAKE
 
+refs:
+	cat ../../../Research/bibs/*.bib > ./ref/refs.bib
+
 thesis: $(THESIS).pdf
 
 all: thesis spine
