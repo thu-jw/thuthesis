@@ -99,11 +99,16 @@
 % 表格中支持跨行
 \usepackage{multirow}
 
+\usepackage{subcaption}
+
 % 跨页表格
 \usepackage{longtable}
 
 % 固定宽度的表格
 \usepackage{tabularx}
+
+% 最全的表格宏包
+\usepackage{tabu}
 
 % 表格中的反斜线
 \usepackage{diagbox}
@@ -122,8 +127,13 @@
 % 定理类环境宏包
 \usepackage[amsmath,thmmarks,hyperref]{ntheorem}
 
+\usepackage{mathtools}
 % 给自定义的宏后面自动加空白
 % \usepackage{xspace}
+
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+% keyboard
+\usepackage{menukeys}
 
 % 借用 ltxdoc 里面的几个命令。
 \def\cmd#1{\cs{\expandafter\cmd@to@cs\string#1}}
@@ -148,7 +158,7 @@
 
 % 定义自己常用的东西
 \def\etal{\textit{et al.}}
-\def\myname{薛瑞尼}
+\def\VACR{视觉溯因常识推理}
 
 % hyperref 宏包在最后调用
 \usepackage{hyperref}
