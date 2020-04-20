@@ -3,6 +3,7 @@
 PACKAGE = thuthesis
 THESIS  = main
 SPINE   = spine
+SLIDE   = middle
 
 SOURCES = $(PACKAGE).ins $(PACKAGE).dtx
 CLSFILE = dtx-style.sty $(PACKAGE).cls
@@ -21,7 +22,12 @@ endif
 refs:
 	cat ../../../Research/bibs/*.bib > ./ref/refs.bib
 
+count:
+	texcount data/chap*.tex | tail -n 18
+
 thesis: $(THESIS).pdf
+
+slide: $(SLIDE).pdf
 
 all: thesis spine
 
@@ -41,6 +47,9 @@ $(PACKAGE).pdf: cls FORCE_MAKE
 
 $(THESIS).pdf: cls FORCE_MAKE
 	$(LATEXMK) $(THESIS)
+
+$(SLIDE).pdf: cls FORCE_MAKE
+	$(LATEXMK) $(SLIDE)
 
 $(SPINE).pdf: cls FORCE_MAKE
 	$(LATEXMK) $(SPINE)
