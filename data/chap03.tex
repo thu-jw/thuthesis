@@ -28,17 +28,18 @@
     \begin{equation}
         P(H_+=H_i | O_{1}, O_{2})\propto  P(H_+=H_i).
     \end{equation}
-    \item 仅第一个观测（1st Observation-Only, FOO）：若事件$H_+=H_i$与$O_2$独立，则有
+    \item 仅第一个观测（1st Observation-Only, 1st-OO）：若事件$H_+=H_i$与$O_2$独立，则有
     \begin{equation}
         P(H_+=H_i | O_{1}, O_{2})\propto  P(H_+=H_i|O_1).
     \end{equation}
-    \item 仅第二个观测（2nd Observation-Only, SOO）：若事件$H_+=H_i$与$O_1$独立，则有
+    \item 仅第二个观测（2nd Observation-Only, 2nd-OO）：若事件$H_+=H_i$与$O_1$独立，则有
     \begin{equation}
         P(H_+=H_i | O_{1}, O_{2})\propto  P(H_+=H_i|O_2).
     \end{equation}
     \item 线性链（Linear Chain, LC）：若$O_1$和$O_2$独立，则
     \begin{equation}
         P(H_+=H_i | O_{1}, O_{2})\propto  P(O_2|H_+=H_i)P(H_+=H_i|O_1).
+        \label{equ:LC}
     \end{equation}
     \item 全连接（Fully Connected, FC）：最普遍的情况，与式~\eqref{equ:prob_model}~一致。
 \end{enumerate}
