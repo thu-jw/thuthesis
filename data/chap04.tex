@@ -1,13 +1,13 @@
 % !TeX root = ../main.tex
 
 \chapter{VideoABC 数据集}\label{cha:VideoABC}
-VideoABC（Video ABductive Commonsense Reasoning）是专门为视频溯因推理任务而设计的一个数据集。该数据集以教程类视频数据集COIN\cite{tang2019coin}为基础进行二次标注进而构建而成。基于COIN数据集来构建VideoABC的原因有以下几点
-\begin{itemize}
+VideoABC（Video ABductive Commonsense Reasoning）是专门为视频溯因推理任务而设计的一个数据集。该数据集以教程类视频数据集COIN\cite{tang2019coin}为基础进行二次标注进而构建而成。基于COIN数据集来构建VideoABC的原因主要有以下几点：
+\begin{enumerate}
     \item COIN数据集是一个教程类视频的数据集，具有明确的步骤划分，每个步骤都是一个将对完整而独立的动作，适合于\VACR 的任务设定；
-    \item COIN数据中的步骤具有很强的时序关系，适合用来构建时序上的推理任务；
+    \item COIN数据集中的步骤具有很强的时序关系，适合用来构建时序上的视觉推理任务；
     \item COIN数据集中的视频都来自于真实世界，从而需要模型具有对常识的理解能力；
     \item COIN 数据集是目前公开数据集中视频数目最多（11,827个），视频总时长最长（超过476h），视频种类最多（180类）。所以，以COIN为基础构建数据集，可以使得训练出来的模型适应于多种日常生活场景中的推理任务。
-\end{itemize}
+\end{enumerate}
 
 本章将详细介绍 VideoABC数据集的构建方式，包括数据的二次标注，数据集的构建，以及难分样本的挖掘。最后将给出VideoABC数据集的一些例子以及统计数据。
 \section{数据标注}
@@ -15,12 +15,12 @@ VideoABC（Video ABductive Commonsense Reasoning）是专门为视频溯因推�
 VideoABC 数据集基于COIN数据集构建，原始的COIN数据集中已经包含了每个步骤的名称以及时间区间的标注，然而COIN的每个视频中可能会出现动作或场景的不连续。二次标注的目的就是通过标注切分点，保证切分后的每个视频的连续性。例如在一个换轮胎的视频中可能包括了多次完整的换轮胎操作，而这每一次的换轮胎操作是互相独立的，属于不同的推理过程，所以应该在相邻的两次换轮胎的操作中间标注一个切分点。再比如在冰壶比赛的视频中，包含了很多轮比赛，而这些比赛是由不同的国家代表队完成的，此时则应该在不同轮比赛之间标注切分。
 
 为了简化表达，本节中对于步骤序列采用以下的记号：
-\begin{itemize}
+\begin{enumerate}
     \item 用不同的字母表示不同类型的步骤。例如$A$和$B$就表示两种不同的步骤；
     \item 用多个字母相乘来表示一个步骤序列。例如$ABC$表示依次执行$A$步骤、$B$步骤和$C$步骤；
     \item 重复的动作用连乘符号$\prod$来表示。例如$\prod_{i=1}^{2}(BC)$表示步骤序列$BCBC$；
     \item 如果重复的步骤前后具有关联，则对这些步骤增加下角标。例如$\prod_{i=1}^{2}(B_iC_i)$表示步骤序列$B_1C_1B_2C_2$。这里虽然$B_1$和$B_2$属于同样的步骤，但是$B_2$的完成依赖于$B_1$的完成。
-\end{itemize}
+\end{enumerate}
 
 
 \begin{table}[htbp]
@@ -35,11 +35,11 @@ VideoABC 数据集基于COIN数据集构建，原始的COIN数据集中已经包
 \end{table}
 
 在实际标注中，我们发现会有一些复杂的情况，即使存在一些重复的步骤，也不应该标注切分点。经过分析之后为这些情况制定了标注规则如表~\ref{tab:anno_rule}~所示。需要注意的是，这里的重复单元为两个步骤$BC$只是为了表述方便，实际情况中可能为任意步骤的重复单元。下面对这些特殊情况进行详细的解释。
-\begin{itemize}
+\begin{enumerate}
     \item $A\prod_{i=1}^{n}(BC)D$ 中，虽然$BC$重复了很多次，但是由于具有开始步骤$A$和结束步骤$D$，意味着从$A$到$D$才是一个完整的任务，所以不添加任何切分点；
     \item $\prod_{i=1}^{n}(B_iC_i)$ 中，重复的动作前后具有连续性。例如在贴墙纸的视频中，一面墙需要贴许多张墙纸，每一次贴墙纸是一个重复步骤，但是后一次与前一次之前存在连续性，总体上的任务应该是包含了每一次的贴墙纸。所以，这种情况下不需要标注切分点；
     \item $\prod_{i=1}^{n}(BC)$ 中，重复的动作前后不具有连续性。例如在制作工艺品的视频中，如果制作者一共制作了多个工艺品，则每个制作过程是独立的，所以应该将它们切分开来。
-\end{itemize}
+\end{enumerate}
 
 以上在实际的标注过程中，还可能遇到一些其他类型的步骤形式，不过总体上把握一个原则，即保证将所有的不连续点切分开来，即可解决大部分的情况。
 
@@ -60,11 +60,11 @@ VideoABC 数据集基于COIN数据集构建，原始的COIN数据集中已经包
     \item 动作列表区。显示了该视频中所有步骤的动作名称，以及动作总数。当前的步骤用蓝色背景标出，标注员可以点击某个步骤快速到达该步骤。
     \item 切分结果区。以列表的形式显示了当前的切分结果，该列表中的每个元素为一个闭区间，表示了每个切分后的视频区间。例如[[0, 1], [2, 3]]表示在步骤1和步骤2中间存在一个切分点。需要注意的是，这里所有的步骤序号都是从0开始计算的。
     \item 编辑区。包括三个控件：切分按钮、删除按钮、确定性开关。
-    \begin{itemize}
+    \begin{enumerate}
         \item 切分按钮：点击后会在当前步骤和下一步骤中间添加一个切分点。
         \item 删除按钮：点击后会出现一个下拉菜单，标注员可以指定删除某一个切分点或者删除所有的切分点。
         \item 确定性开关：用来表示对当前视频标注结果是否确定，默认为开启状态（确定）。一旦标注员将其切换到关闭状态（不确定）时，界面下方会出现一个文本框，可以在其中填写不确定的理由。这样我们可以在最后统一处理有疑问的视频。
-    \end{itemize}
+    \end{enumerate}
     \item 导航区。包括四个按钮，分别为上一视频、下一视频、上一步骤、下一步骤。
     \item 关键帧区。展示了当前动作和下一动作的关键帧。由于标注的目标是找到视频中的不连续点，这里显示的是当前步骤的最后一帧和下一步骤的第一帧。如果当前步骤后存在切分点，这两张图片之间会显示一条浅灰色的竖线（如图~\ref{fig:anno_tool}~所示）。
     
@@ -104,26 +104,26 @@ VideoABC 数据集基于COIN数据集构建，原始的COIN数据集中已经包
 本节将详细介绍标注网站的实现细节。
 \subsubsection{后端}
 标注网站的后端基于Django\cite{django}框架构建。一个Django工程中可以包含多个应用（app），例如本节中介绍的标注工具就是一个应用，我们将其命名为anno（annotation）。anno 文件夹下的目录如下（仅列出主要的文件和目录）：
-\begin{itemize}
+\begin{enumerate}
     \item anno/
-    \begin{itemize}
+    \begin{enumerate}
         \item models.py
         \item views.py
         \item urls.py
         \item static/
         \item templates/
         \item ...
-    \end{itemize}
-\end{itemize}
+    \end{enumerate}
+\end{enumerate}
 其中，models.py 中定义了数据结构，urls.py 中定义了各个网页的url，views.py 中定义了每个网页的传入内容和跳转关系，templates 目录中的 HTML 模板用来渲染每个网页，static 目录中用来存放一些固定不变的文件（如图片、视频、CSS 等等）。下面介绍后端的一些重要组成部分，包括数据结构、URL定义和页面跳转逻辑，以及它们的实现方式。
 
 \paragraph{数据结构} 首先需要定义数据结构，即标注结果的存储方式。由于我们的标注是以视频为单位进行的，这里的数据结构也应该以视频为单位。具体来说，我们定义Video类如表~\ref{tab:video_vars}~所示。大部分的内容在表中已经表达得很清楚，但仍有一些需要明确：
-\begin{itemize}
+\begin{enumerate}
     \item action\_ids 是指该视频中的动作在COIN数据集中\emph{所有}动作的序号，不同的动作用逗号分隔开。
     \item cut\_points 中不同的切分点用逗号分隔，例如“1,2,5”表示在步骤1、步骤2、步骤5后添加切分点。
     \item note 只在 certainty 被置为False时才可写入。
     \item prev\_vid 是指当前编辑视频之前所编辑的视频的序号。
-\end{itemize}
+\end{enumerate}
 
 Video类定义在models.py中，Django框架可以自动为其链接到数据库（本文使用SQLite数据库），所有的Video对象被保存在数据库中的一张表中，数据域与成员变量相对应。
 \begin{table}
@@ -167,7 +167,7 @@ Video类定义在models.py中，Django框架可以自动为其链接到数据库
     \end{tabu}
 \end{table}
 \paragraph{页面跳转逻辑} 表~\ref{tab:urls}~中已经给出了URL模式的定义，下面介绍它们之间的页面跳转逻辑。
-\begin{itemize}
+\begin{enumerate}
     \item 访问标注界面时，后端会调用 views.anno 函数，根据video\_id 从数据库中读取对应视频条目，根据start\_step 选定当前步骤，将所有需要显示的信息（视频基本信息、关键帧路径、标注进度等）传入HTML模板中渲染。
     \item 点击动作列表区的步骤，会改变当前的步骤序号并重新加载标注页面。
     \item 按下导航区的某个按钮时会发送表单到 <int:video\_id>/navigate ，进而调用views.navigate 函数。在函数内部通过读取表单信息，确定导航后的视频序号、步骤序号，再重定向到标注页面。
@@ -176,7 +176,7 @@ Video类定义在models.py中，Django框架可以自动为其链接到数据库
    \item 点击下一视频按钮时，将当前视频状态更改为标注完成，并选择一个未标注的视频作为下一视频，将下一视频的“prev\_id”变量更改为当前视频的序号。
    \item 按下快捷键“R”时，跳转到resume/ 并调用 views.resume 函数，寻找数据库中处于“标注中”状态的视频并跳转到该视频的标注界面。
    \item 在标注网站的主页（图~\ref{fig:anno_index}~）中有两个按钮，分别为继续上一标注（Continue）和开始新标注（Start new）。若选择继续上一标注，则跳转到resume/页面；若选择开始新标注，则跳转到start/页面，通过调用views.start 函数，在数据库中选择一个未标注过的视频并跳转到该视频的标注页面。
-\end{itemize}
+\end{enumerate}
 
 以上的这些跳转逻辑在实现标注功能的同时保证了线程安全，确保可以多个标注员同时标注而不发生冲突。其中视频状态的设计相当于加锁，保证一位标注员在对某个视频标注的过程中其他标注员不会访问到同样的视频。
 
@@ -188,12 +188,12 @@ Video类定义在models.py中，Django框架可以自动为其链接到数据库
 \end{figure}
 \subsubsection{前端}
 标注网站的前端使用HTML+CSS+JavaScript 构建。其中HTML负责基本排版，CSS负责样式渲染，JavaScript用来实现各种快捷键操作。为了统一风格，本文使用了Bootstrap\cite{bootstrap}库完成了大部分的排版和渲染。使用Bootstrap 有以下几个好处：
-\begin{itemize}
+\begin{enumerate}
     \item 包括了大量的预定义样式，例如按钮、导航栏、表单等等，可节省大量的CSS代码编写量。且风格统一，简洁而不失美观。
     \item 调用十分方便，只需在代码中添加几行就可以使用。
     \item 复用性强，目前很多网站中都在使用Bootstrap框架，所以大部分的浏览器中都已经预先下载过Bootstrap中的资源，避免了资源文件的重复下载。
     \item 具有多种使用的便于使用的布局工具，例如流动性容器可以使控件根据屏幕大小自动调整，便于从不同的客户端访问标注网站。
-\end{itemize}
+\end{enumerate}
 
 \section{数据集构建}
 \subsection{视频切分与筛选}
@@ -215,19 +215,19 @@ Video类定义在models.py中，Django框架可以自动为其链接到数据库
 上述的做法保证了两个观测$O_1$和$O_2$不会直接出现在$H_+$的帧中。否则如果$H_+$里直接使用16帧，或等间隔抽8帧都会出现这种情况，导致模型只需要做简单的比对就能得出答案。
 
 接下来对数据集进行划分。定义训练集比例$\alpha$，划分训练集和测试集，保证：
-\begin{itemize}
+\begin{enumerate}
     \item $\gD''$中来自于同一个原始视频的必须同时被划分到训练集或测试集；
     \item 同一类别的视频中，训练样本的比例尽可能接近$\alpha$。
-\end{itemize}
+\end{enumerate}
 至此，我们已经得到了训练集和测试集的所有观测和正确假设。
 \subsection{错误假设生成}
 本节介绍如何根据正确假设来生成错误的假设集合$\gH_-$。VideoABC数据集中共包括四种错误类型：
-\begin{itemize}
+\begin{enumerate}
     \item 删除（remove）一个步骤；
     \item 交换（swap）两个步骤；
     \item 插入（insert）一个步骤；
     \item 替换（replace）一个步骤。
-\end{itemize}
+\end{enumerate}
 正是因为有这几种错误类型，我们在之前对视频切分和筛选时才指定了一个最小步骤数$m=2$，否则swap和remove两种错误类型将不存在，insert则可以通过判断步骤数简单排除，只剩下replace 的错误类型可供选择。对于每个问题，我们会均匀生成各种错误类型的选项，从中选取三个，与正确选项一起，构成一个四选一的选择题。
 \subsection{难分选项挖掘}
 构建VideoABC时的一个关键的地方在于能够生成出高质量的干扰选项，从而使得任务更有挑战，更能筛选出推理能力强的模型。为了去除过于明显的错误假设，本文使用了难分选项挖掘（Hard Choice Mining）的方法来提高难度。具体步骤如下：

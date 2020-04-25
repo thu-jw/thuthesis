@@ -5,13 +5,13 @@
 到目前为止，学者们已经提出了许多种视觉推理任务，视觉问答（Visual Question Answering, VQA）\cite{antol2015vqa}是其中比较早的一类任务。在VQA任务中，模型的输入是一张图片和一个与图片相关的问题，模型需要根据图片中的内容来回答问题。图~\ref{fig:vqa}~是VQA数据集\cite{antol2015vqa}中的一些例子。
 \begin{figure}[!b]
     \includegraphics[width = \textwidth]{vqa.png}
-    \caption{VQA数据集\cite{antol2015vqa}}
+    \caption{VQA数据集}
     \label{fig:vqa}
 \end{figure}
 可以看到，VQA数据集中的图片来自于真实世界中的场景，其对应的问题也具有多样性。
 
 然而，VQA\cite{antol2015vqa}数据集是严重有偏的。例如，对于以``Do you see
-a...''开头的问题，模型不看图片直接回答``yes''就可以获得87\%的准确率\cite{goyal2017making}。也就是说，在有些情况下，模型掌握了一些捷径，从而可以无需关注图片的内容，甚至不用读完问题，就可以取得正确的答案。为了解决这个问题，Goyal~\etal\cite{goyal2017making}提出了在 VQA 数据集的基础上构建平衡的数据集，得到了改进版本：VQAv2.0。VQAv2.0 中的每个问题都对应着两张图片，并确保在这两张图片上该问题的答案不同，如图~\ref{fig:vqav2}~所示。这样的设计保证了模型不可能仅仅根据问题就得出答案，从而必须对视觉信息进行推理。在VQAv2.0上表现较好的模型总体上的架构类似\cite{kim2018bilinear,anderson2018bottom,gao2019dynamic}，其关键在于视觉特征和文本特征的提取和融合。在特征提取方面，这些模型通常使用目标检测中的R-CNN\cite{ren2015faster}模型来提取视觉特征，利用循环神经网络（LSTM\cite{hochreiter1997long}、GRU\cite{cho2014learning}）来提取文本特征。得到了视觉和文本特征后，可以采用多种方法完成特征的融合。例如，Kim~\etal\cite{kim2018bilinear}使用双线性注意力网络来融合特征；Anderson~\etal\cite{anderson2018bottom}首先用文本特征计算注意力系数来对图像特征加权，再将两种特征融合；Gao~\etal\cite{gao2019dynamic}则综合使用模态内和模态间的动态注意力机制将视觉特征和文本特征逐步融合。然而，这些利用注意力机制的方法却缺乏对推理过程的建模。
+a...''开头的问题，模型不看图片直接回答``yes''就可以获得87\%的准确率\cite{goyal2017making}。也就是说，在有些情况下，模型掌握了一些捷径，从而可以无需关注图片的内容，甚至不用读完问题，就可以取得正确的答案。为了解决这个问题，Goyal~\etal\cite{goyal2017making}提出了在 VQA 数据集的基础上构建平衡的数据集，得到了改进版本：VQAv2.0。VQAv2.0 中的每个问题都对应着两张图片，并确保在这两张图片上该问题的答案不同，如图~\ref{fig:vqav2}~所示。这样的设计保证了模型不可能仅仅根据问题就得出答案，从而必须对视觉信息进行推理。在VQAv2.0上表现较好的模型总体上的架构类似\cite{kim2018bilinear,anderson2018bottom,gao2019dynamic}，其关键在于视觉特征和文本特征的提取和融合。在特征提取方面，这些模型通常使用目标检测中的R-CNN\cite{ren2015faster}模型来提取视觉特征，利用循环神经网络（LSTM\cite{hochreiter1997long}、GRU\cite{cho2014learning}）来提取文本特征。得到了视觉和文本特征后，可以采用多种方法完成特征的融合。例如，Kim~\etal\cite{kim2018bilinear}使用双线性注意力网络来融合特征；Anderson~\etal\cite{anderson2018bottom}首先用文本特征计算注意力系数来对图像特征加权，再将两种特征融合；Gao~\etal\cite{gao2019dynamic}则综合使用模态内和模态间的动态注意力机制将视觉特征和文本特征逐步融合。然而，这些基于视觉特征和文本特征的提取和融合的方法都缺乏对推理过程的建模。
 
 \begin{figure}
     \includegraphics[width = \textwidth]{vqav2.png}
@@ -32,16 +32,23 @@ a...''开头的问题，模型不看图片直接回答``yes''就可以获得87\%
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{raven.png}
-    \caption{RAVEN 数据集\cite{zhang2019raven}}
+    \begin{subfigure}{.35\textwidth}
+        \includegraphics[width=\textwidth]{raven1.png}
+        \caption{问题}
+    \end{subfigure}\hfill
+    \begin{subfigure}{.55\textwidth}
+        \includegraphics[width=\textwidth]{raven2.png}
+        \caption{候选答案}
+    \end{subfigure}
+    \caption{RAVEN 数据集}
     \label{fig:raven}
 \end{figure}
 
 最近，有学者将溯因推理（Abductive Reasoning）引入到自然语言领域，构建了一个新的推理任务：溯因自然语言推理\cite{bhagavatula2019abductive}（Abductive Natural Language Inference, $\alpha$NLI）。图~\ref{fig:aNLI}~是$\alpha$NLI任务的一个示意图。在这个任务中，模型首先可以看到两个观测$O_1$和$O_2$，这两个观测分别表示起始状态和结束状态。
-\begin{figure}
+\begin{figure}[!h]
     \centering
     \includegraphics[width=\textwidth]{abductive.png}
-    \caption{$\alpha$NLI 任务\cite{bhagavatula2019abductive}示意图}
+    \caption{$\alpha$NLI 任务示意图}
     \label{fig:aNLI}
 \end{figure}
 例如在图~\ref{fig:aNLI}~中，开始状态为“Jenny 打扫房间后去工作，窗户开了个缝”，结束状态为“Jenny回家时看到房间里一团糟”。模型需要从多个可能的假设$\{H_i\}$中选出最有可能的一个，例如这个例子中展示了三个可能的假设，其中最有可能的假设是“一个小偷从窗户闯入了房子”，而另外两个假设存在明显的逻辑错误。综上可知，在溯因推理任务中，模型需要能够判断出是哪些因素导致了从初始状态到结束状态的变化。
@@ -52,10 +59,10 @@ a...''开头的问题，模型不看图片直接回答``yes''就可以获得87\%
 
 由于COIN数据集具有较多的视频和明确的步骤标注，非常适合应用在视频溯因常识推理的任务上。本文以COIN数据集为基础，并对其进行二次标注，构建了视频溯因常识推理的数据集VideoABC。
 
-\begin{figure}[]
+\begin{figure}[!h]
     \centering
     \includegraphics[width=\textwidth]{coin.png}
-    \caption{COIN数据集\cite{tang2019coin}}
+    \caption{COIN数据集}
     \label{fig:coin}
 \end{figure}
 \section{视频理解}

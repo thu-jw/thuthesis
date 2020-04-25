@@ -11,11 +11,11 @@
     \label{fig:birnn}
 \end{figure}
 使用双向RNN来实现推理模块是基于以下几个原因：
-\begin{itemize}
+\begin{enumerate}
     \item RNN是为了对序列建模而设计的，所以自然适合于时序上的推理；
     \item RNN的输入序列长度可以变化，可以适应不同步骤数目的情况；
     \item 双向RNN保证了每一步的推理都能够考虑到前面的步骤和后面的步骤。
-\end{itemize}
+\end{enumerate}
 
 在步骤内不理模块中，RNN的输入序列为：
 \begin{equation}
@@ -87,11 +87,11 @@
     \label{fig:hdrnet}
 \end{figure}
 图~\ref{fig:hdrnet}~中绿色的部分是本文提出的HDR Module（如图~\ref{fig:HDR_Module}~），其他部分则与ResNet18相同。由于HDR Module已经在时间维度占用了较多的计算量，为了减少计算量，使用了如下几个方法：
-\begin{itemize}
+\begin{enumerate}
     \item 使用层数较少的主干网络，即ResNet18而不是更深的网络；
     \item 在标准的ResNet18的基础上，将所有通道数目减半；
     \item 在第一个HDR Module 后面紧接着一个时间维度的池化层，该操作将每个步骤中的8帧减少为每个步骤4帧。
-\end{itemize}
+\end{enumerate}
 
 最后一个HDR Module 后面的池化层同时对时间和空间上取平均，得到了最终的时间和空间上的特征。在VideoABC数据集中，每个问题中都有四个选项，HDR Net会将每个选项分别处理，最后的全连接网络将池化层输出的特征映射到一个实数，作为每个选项的得分，也就是说，最终预测的选项为：
 
